@@ -1,6 +1,26 @@
 import { useState } from 'react';
-import { Select, Space, Typography, Flex, Divider, Form, Input, Button } from 'antd';
+import {
+  Select,
+  Space,
+  Typography,
+  Flex,
+  Divider,
+  Form,
+  DatePicker,
+  Button,
+  InputNumber,
+} from 'antd';
 import { useCrypto } from '../../context/CryptoContext';
+
+const validateMessages = {
+  required: '${label} is required',
+  types: {
+    number: '${label} is not valid number',
+  },
+  number: {
+    range: '${label} must be between ${min} and ${max}',
+  },
+};
 
 export const AddAssetForm = () => {
   const [coin, setCoin] = useState(null);
@@ -29,24 +49,25 @@ export const AddAssetForm = () => {
     );
   }
 
+  function onFinish(values) {}
+
   return (
     <Form
       name="basic"
       labelCol={{
-        span: 8,
+        span: 4,
       }}
       wrapperCol={{
-        span: 16,
+        span: 10,
       }}
       style={{
         maxWidth: 600,
       }}
       initialValues={{
-        remember: true,
+        price: +coin.price.toFixed(2),
       }}
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      autoComplete="off"
+      validateMessages={validateMessages}
     >
       <Flex align="center">
         <img src={coin.icon} alt={coin.name} style={{ width: 40, marginRight: 10 }} />
@@ -55,51 +76,32 @@ export const AddAssetForm = () => {
         </Typography.Title>
       </Flex>
       <Divider />
+
       <Form.Item
-        label="Username"
-        name="username"
+        label="Amount"
+        name="amount"
         rules={[
           {
             required: true,
-            message: 'Please input your username!',
+            type: 'number',
+            min: 0,
           },
         ]}
       >
-        <Input />
+        <InputNumber style={{ width: '100%' }} />
       </Form.Item>
-
-      <Form.Item
-        label="Password"
-        name="password"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your password!',
-          },
-        ]}
-      >
-        <Input.Password />
+      <Form.Item label="Price" name="price">
+        <InputNumber disabled style={{ width: '100%' }} />
       </Form.Item>
-
-      <Form.Item
-        name="remember"
-        valuePropName="checked"
-        wrapperCol={{
-          offset: 8,
-          span: 16,
-        }}
-      >
-        <Checkbox>Remember me</Checkbox>
+      <Form.Item label="Date & Time" name="date">
+        <DatePicker showTime />
       </Form.Item>
-
-      <Form.Item
-        wrapperCol={{
-          offset: 8,
-          span: 16,
-        }}
-      >
+      <Form.Item label="Total" name="total">
+        <InputNumber disabled style={{ width: '100%' }} />
+      </Form.Item>
+      <Form.Item>
         <Button type="primary" htmlType="submit">
-          Submit
+          Add Asset
         </Button>
       </Form.Item>
     </Form>
